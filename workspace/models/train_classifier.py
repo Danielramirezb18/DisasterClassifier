@@ -47,6 +47,13 @@ lemmatizer = WordNetLemmatizer()
 
 def load_data(database_filepath):
     
+    '''
+    This function load the processed dataframe from the
+    created database on proces_data.py , then it divide
+    the data into features and target values to be returned
+    to the main function
+    '''
+    
     # load data from database
     engine = create_engine('sqlite:///'+database_filepath)
     df = pd.read_sql_table('dataset_clean', engine)
@@ -55,13 +62,19 @@ def load_data(database_filepath):
     columns = list(df.columns)
     columns = columns[4:]
     y = df[columns]
-    #Replace a value tha was detected to be wrong
-    y['related'].replace(2, 1, inplace=True)
     
     return X, y, columns
 
 
 def tokenize(text):
+    
+    '''
+    The tokenize function performs NLP processing of the training 
+    data, takes a block of text and filters the special catacters 
+    it contains, then the function breaks the text into words. 
+    Finally, all stopwords are removed and the tagline is extracted
+    from each word.
+    '''
     # normalize case and remove punctuation
     text = re.sub(r"[^a-zA-Z0-9]", " ", text.lower())
     
@@ -75,6 +88,13 @@ def tokenize(text):
 
 
 def build_model():
+    
+    '''
+    This function performs and establishes the ML pipeline, uses two 
+    estimators and a transformer. Then we specify the other hyperparameters 
+    based on the GridSearchCV performed in the Jupyter Notebook analysis.
+    '''
+    
     #Define the best ML pipeline with two estimators and one transformer
     pipeline = Pipeline([
         ('vect', CountVectorizer(tokenizer=tokenize, max_df=0.5, max_features=5000, ngram_range=(1, 2))),
@@ -86,6 +106,12 @@ def build_model():
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
+    
+    '''
+    The model evaluation function, estimates the model predictions and 
+    then we use some defined metrics such as F1 score, support and 
+    precision to evaluate how the model is performing on the training data.
+    '''
     
     #Calculate predictions
     y_pred = model.predict(X_test)
@@ -100,6 +126,11 @@ def evaluate_model(model, X_test, Y_test, category_names):
 
 def save_model(model, model_filepath):
     
+    '''
+    This function takes de train model on pickle format this is usefull
+    because after saving that it can be use on other programs
+    '''
+    
     #Save the results of gridsearchcv on a pickle file
     pickle.dump(model, open(model_filepath, 'wb'))
     
@@ -107,6 +138,12 @@ def save_model(model, model_filepath):
 
 
 def main():
+    
+    '''
+    The main function process all the functions step by step to train de classifier
+    '''
+    
+    
     if len(sys.argv) == 3:
         database_filepath, model_filepath = sys.argv[1:]
         print('Loading data...\n    DATABASE: {}'.format(database_filepath))

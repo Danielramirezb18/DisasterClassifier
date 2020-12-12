@@ -12,6 +12,13 @@ from sqlalchemy import create_engine
 
 def load_data(messages_filepath, categories_filepath):
     
+    '''
+    The data load function takes the path of the source files and uses 
+    them to load these in the dataframe format, then we combine both 
+    dataframes to get all the complete information to generate the 
+    training base.
+    '''
+    
     # load messages dataset
     messages = pd.read_csv(messages_filepath)
     # load categories dataset
@@ -23,6 +30,14 @@ def load_data(messages_filepath, categories_filepath):
 
 
 def clean_data(df, categories_filepath):
+    
+    '''    
+    This function takes the category basis and processes it, this file 
+    contains all the multiclass classification. First we divide the 
+    data by the delimiter and remove the category names implicit in 
+    the data. Finally we filter out the non-binary values, merge the 
+    two dataframes, and remove the duplicate records.
+    '''
     
     # load categories dataset
     categories = pd.read_csv(categories_filepath)
@@ -51,12 +66,15 @@ def clean_data(df, categories_filepath):
 
             # convert column from string to numeric
             categories[column] = pd.to_numeric(categories[column])
+            
+    #Dekete values that are not binary
+    categories = categories[categories.related != 2]
 
     # drop the original categories column from `df`
     del df['categories']
 
     # concatenate the original dataframe with the new `categories` dataframe
-    df = df.merge(categories, on='id', how='left')
+    df = df.merge(categories, on='id', how='inner')
 
     # drop duplicates
     df = df.drop_duplicates()
@@ -66,14 +84,24 @@ def clean_data(df, categories_filepath):
 
 def save_data(df, database_filename):
     
+    '''
+    This function takes the clean dataframe and save it on a SQLite database
+    '''
+    
     #the clean dataframe is saved on a SQLite database table
     engine = create_engine('sqlite:///'+database_filename)
-    df.to_sql('dataset_clean', engine, index=False)
+    df.to_sql('dataset_clean', engine, index=False, if_exists = 'replace')
     
     pass  
 
 
 def main():
+    
+    '''
+    The main function process all the functions step by step to process
+    and clean the data.
+    '''
+    
     if len(sys.argv) == 4:
 
         messages_filepath, categories_filepath, database_filepath = sys.argv[1:]
