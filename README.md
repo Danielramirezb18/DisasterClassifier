@@ -6,8 +6,8 @@ The web app will also display visualizations of the training data related to the
 
 # Project structure
 <ul>
-<li>notebooks: We've provided Jupyter notebooks in Project Workspaces with instructions to get you started with both data pipelines. The Jupyter notebook is not required for submission, but highly recommended to complete before getting started on the Python script.</li>
-<li>workspace: After you complete the notebooks for the ETL and machine learning pipeline, you'll need to transfer your work into Python scripts, process_data.py and train_classifier.py. If someone in the future comes with a revised or new dataset of messages, they should be able to easily create a new model just by running your code. These Python scripts should be able to run with additional arguments specifying the files used for the data and model..</li>
+<li>notebooks: This notebook are an exploratory analysis of the data processing and mdoeling process</li>
+<li>workspace: It contains all the files nedeed to execute the web app, aditionaly it has files of data transaformation and model building.</li>
 </ul>
 
 # Dataset and libraries
@@ -27,8 +27,3 @@ disaster_categories.csv: This file has all the message with the category classif
 <li>sklearn.</li>
 <li>pickle.</li> 
 </ul>
-
-
-# Results
-
-This analysis shows the importance of the entire process and the CRISP-DP methodology, it also denotes the relevant factors when it comes to creating a business case. Additionally, it allows determining the relevant factors that determine the price of the accommodations posted on Airbnb, drawing up a preventive model on this.
