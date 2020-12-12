@@ -97,12 +97,23 @@ def build_model():
     
     #Define the best ML pipeline with two estimators and one transformer
     pipeline = Pipeline([
-        ('vect', CountVectorizer(tokenizer=tokenize, max_df=0.5, max_features=5000, ngram_range=(1, 2))),
-        ('tfidf', TfidfTransformer(use_idf=False)),
+        ('vect', CountVectorizer(tokenizer=tokenize)),
+        ('tfidf', TfidfTransformer()),
         ('clf', MultiOutputClassifier(RandomForestClassifier()))
     ])
     
-    return pipeline
+    #Define the parameters of param grid
+    #Some of them are commented because the training time increases significantly
+    parameters = {
+            'vect__ngram_range': ((1, 1), (1, 2)),
+            'vect__max_df': (0.5, 1.0),
+            'vect__max_features': (None, 5000),
+            'tfidf__use_idf': (True, False)
+        }
+
+    cv = GridSearchCV(pipeline, param_grid=parameters)
+    
+    return cv
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
