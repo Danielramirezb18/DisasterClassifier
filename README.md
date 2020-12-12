@@ -21,7 +21,6 @@ disaster_messages.csv: In this case we will use Kaggle's open repository 'Seattl
 
 <ul>
 <li>pandas.</li>
-<li>numpy.</li>
 <li>nltk.</li>
 <li>sqlalchemy.</li>  
 <li>re.</li> 
